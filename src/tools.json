@@ -1,0 +1,554 @@
+[
+ {
+  "name": "get_state",
+  "description": "Ce que l'utilisateur a sous les yeux : vue, filtres, artiste ou mail ouvert, statistiques, styles disponibles.",
+  "parameters": {
+   "type": "object",
+   "properties": {},
+   "required": []
+  }
+ },
+ {
+  "name": "list_artists",
+  "description": "Liste les artistes de la base générale (id, nom, styles, pays, proposé ou non pour l'édition en cours et statut, priorité, cachet). proposed=true : seulement la liste des propositions.",
+  "parameters": {
+   "type": "object",
+   "properties": {
+    "style": {
+     "type": "string"
+    },
+    "status": {
+     "type": "string"
+    },
+    "query": {
+     "type": "string"
+    },
+    "proposed": {
+     "type": "boolean"
+    }
+   },
+   "required": []
+  }
+ },
+ {
+  "name": "enrich_artist",
+  "description": "Complète automatiquement une fiche (liens officiels, photo, genres → styles, pays, popularité) via Spotify, Wikidata, Discogs, Last.fm.",
+  "parameters": {
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  }
+ },
+ {
+  "name": "propose_artist",
+  "description": "Ajoute un artiste de la base à la liste des propositions de l'édition en cours (ou change son statut).",
+  "parameters": {
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "proposition",
+      "shortlist",
+      "contacte",
+      "negociation",
+      "confirme",
+      "refuse"
+     ]
+    }
+   },
+   "required": [
+    "id"
+   ]
+  }
+ },
+ {
+  "name": "unpropose_artist",
+  "description": "Retire un artiste de la liste des propositions (il reste dans la base).",
+  "parameters": {
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  }
+ },
+ {
+  "name": "get_artist",
+  "description": "Fiche complète d'un artiste (par id ou nom), avec les mails liés.",
+  "parameters": {
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "name": {
+     "type": "string"
+    }
+   },
+   "required": []
+  }
+ },
+ {
+  "name": "add_artist",
+  "description": "Crée une fiche artiste. Vérifie d'abord avec list_artists qu'il n'existe pas déjà.",
+  "parameters": {
+   "type": "object",
+   "properties": {
+    "name": {
+     "type": "string",
+     "description": "Nom de scène"
+    },
+    "styles": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     },
+     "description": "Styles musicaux (utilise de préférence ceux de get_state.styles_disponibles)"
+    },
+    "country": {
+     "type": "string",
+     "description": "Pays (en français)"
+    },
+    "city": {
+     "type": "string"
+    },
+    "formation": {
+     "type": "string",
+     "enum": [
+      "Solo",
+      "DJ",
+      "Duo",
+      "Groupe",
+      "Collectif",
+      "B2B"
+     ]
+    },
+    "bio": {
+     "type": "string",
+     "description": "Petite présentation (3 à 6 phrases)"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "proposition",
+      "shortlist",
+      "contacte",
+      "negociation",
+      "confirme",
+      "refuse"
+     ],
+     "description": "Statut dans la liste des propositions de l'édition en cours (le fait d'en donner un ajoute l'artiste à cette liste)"
+    },
+    "priority": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 3,
+     "description": "0 à 3 étoiles"
+    },
+    "found_via": {
+     "type": "string",
+     "description": "Où l'artiste a été trouvé : 'Formulaire du site', 'Mail reçu', 'Agence / booker', 'Proposé par le comité', 'Repéré en concert', 'Repéré sur le web / réseaux', 'Recommandation' ou 'Autre'"
+    },
+    "source": {
+     "type": "string",
+     "description": "Détail de la provenance (nom de l'agence, de l'expéditeur, du membre du comité…)"
+    },
+    "fee_amount": {
+     "type": "number",
+     "description": "Cachet demandé"
+    },
+    "fee_max": {
+     "type": "number",
+     "description": "Haut de la fourchette si fourchette"
+    },
+    "fee_currency": {
+     "type": "string",
+     "enum": [
+      "CHF",
+      "EUR",
+      "USD",
+      "GBP"
+     ]
+    },
+    "fee_notes": {
+     "type": "string"
+    },
+    "contact_agency": {
+     "type": "string"
+    },
+    "contact_name": {
+     "type": "string"
+    },
+    "contact_email": {
+     "type": "string"
+    },
+    "contact_phone": {
+     "type": "string"
+    },
+    "link_spotify": {
+     "type": "string"
+    },
+    "link_instagram": {
+     "type": "string"
+    },
+    "link_youtube": {
+     "type": "string"
+    },
+    "link_soundcloud": {
+     "type": "string"
+    },
+    "link_website": {
+     "type": "string"
+    },
+    "listeners": {
+     "type": "integer",
+     "description": "Auditeurs mensuels Spotify"
+    },
+    "notes": {
+     "type": "string",
+     "description": "Notes internes"
+    },
+    "tags": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    }
+   },
+   "required": [
+    "name"
+   ]
+  }
+ },
+ {
+  "name": "update_artist",
+  "description": "Modifie une fiche (seuls les champs donnés changent). note_history ajoute une ligne à l'historique.",
+  "parameters": {
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "name": {
+     "type": "string",
+     "description": "Nom de scène"
+    },
+    "styles": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     },
+     "description": "Styles musicaux (utilise de préférence ceux de get_state.styles_disponibles)"
+    },
+    "country": {
+     "type": "string",
+     "description": "Pays (en français)"
+    },
+    "city": {
+     "type": "string"
+    },
+    "formation": {
+     "type": "string",
+     "enum": [
+      "Solo",
+      "DJ",
+      "Duo",
+      "Groupe",
+      "Collectif",
+      "B2B"
+     ]
+    },
+    "bio": {
+     "type": "string",
+     "description": "Petite présentation (3 à 6 phrases)"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "proposition",
+      "shortlist",
+      "contacte",
+      "negociation",
+      "confirme",
+      "refuse"
+     ],
+     "description": "Statut dans la liste des propositions de l'édition en cours (le fait d'en donner un ajoute l'artiste à cette liste)"
+    },
+    "priority": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 3,
+     "description": "0 à 3 étoiles"
+    },
+    "found_via": {
+     "type": "string",
+     "description": "Où l'artiste a été trouvé : 'Formulaire du site', 'Mail reçu', 'Agence / booker', 'Proposé par le comité', 'Repéré en concert', 'Repéré sur le web / réseaux', 'Recommandation' ou 'Autre'"
+    },
+    "source": {
+     "type": "string",
+     "description": "Détail de la provenance (nom de l'agence, de l'expéditeur, du membre du comité…)"
+    },
+    "fee_amount": {
+     "type": "number",
+     "description": "Cachet demandé"
+    },
+    "fee_max": {
+     "type": "number",
+     "description": "Haut de la fourchette si fourchette"
+    },
+    "fee_currency": {
+     "type": "string",
+     "enum": [
+      "CHF",
+      "EUR",
+      "USD",
+      "GBP"
+     ]
+    },
+    "fee_notes": {
+     "type": "string"
+    },
+    "contact_agency": {
+     "type": "string"
+    },
+    "contact_name": {
+     "type": "string"
+    },
+    "contact_email": {
+     "type": "string"
+    },
+    "contact_phone": {
+     "type": "string"
+    },
+    "link_spotify": {
+     "type": "string"
+    },
+    "link_instagram": {
+     "type": "string"
+    },
+    "link_youtube": {
+     "type": "string"
+    },
+    "link_soundcloud": {
+     "type": "string"
+    },
+    "link_website": {
+     "type": "string"
+    },
+    "listeners": {
+     "type": "integer",
+     "description": "Auditeurs mensuels Spotify"
+    },
+    "notes": {
+     "type": "string",
+     "description": "Notes internes"
+    },
+    "tags": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "note_history": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  }
+ },
+ {
+  "name": "open_artist",
+  "description": "Affiche la fiche d'un artiste dans l'app.",
+  "parameters": {
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  }
+ },
+ {
+  "name": "set_view",
+  "description": "Change d'écran et/ou de filtres.",
+  "parameters": {
+   "type": "object",
+   "properties": {
+    "view": {
+     "type": "string",
+     "enum": [
+      "dashboard",
+      "artists",
+      "proposals",
+      "timetable",
+      "mail",
+      "settings"
+     ]
+    },
+    "style": {
+     "type": "string"
+    },
+    "status": {
+     "type": "string"
+    },
+    "query": {
+     "type": "string"
+    }
+   },
+   "required": []
+  }
+ },
+ {
+  "name": "read_open_email",
+  "description": "Mode Outlook intégré : objet, expéditeur et texte du mail actuellement ouvert dans Outlook (ou du texte sélectionné).",
+  "parameters": {
+   "type": "object",
+   "properties": {},
+   "required": []
+  }
+ },
+ {
+  "name": "list_emails",
+  "description": "Liste les mails (depuis le cache local, synchronisé régulièrement) : uid, expéditeur, objet, date, lu, catégorie, extrait, artiste lié.",
+  "parameters": {
+   "type": "object",
+   "properties": {
+    "folder": {
+     "type": "string",
+     "description": "défaut INBOX"
+    },
+    "unread_only": {
+     "type": "boolean"
+    },
+    "category": {
+     "type": "string",
+     "enum": [
+      "booking",
+      "candidature",
+      "admin",
+      "presse",
+      "autre"
+     ]
+    },
+    "query": {
+     "type": "string"
+    },
+    "limit": {
+     "type": "integer"
+    }
+   },
+   "required": []
+  }
+ },
+ {
+  "name": "read_email",
+  "description": "Contenu complet d'un mail (texte, pièces jointes). open=true l'affiche aussi à l'écran.",
+  "parameters": {
+   "type": "object",
+   "properties": {
+    "uid": {
+     "type": "integer"
+    },
+    "folder": {
+     "type": "string"
+    },
+    "open": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "uid"
+   ]
+  }
+ },
+ {
+  "name": "link_email_to_artist",
+  "description": "Rattache un mail à la fiche d'un artiste.",
+  "parameters": {
+   "type": "object",
+   "properties": {
+    "uid": {
+     "type": "integer"
+    },
+    "folder": {
+     "type": "string"
+    },
+    "artist_id": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "uid",
+    "artist_id"
+   ]
+  }
+ },
+ {
+  "name": "draft_email",
+  "description": "Ouvre la fenêtre de rédaction pré-remplie (l'utilisateur relit et clique lui-même sur Envoyer). reply_to_uid pour répondre à un mail.",
+  "parameters": {
+   "type": "object",
+   "properties": {
+    "to": {
+     "type": "string"
+    },
+    "subject": {
+     "type": "string"
+    },
+    "body": {
+     "type": "string"
+    },
+    "reply_to_uid": {
+     "type": "integer"
+    },
+    "folder": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "body"
+   ]
+  }
+ },
+ {
+  "name": "sync_mail",
+  "description": "Relève les nouveaux mails.",
+  "parameters": {
+   "type": "object",
+   "properties": {},
+   "required": []
+  }
+ },
+ {
+  "name": "get_timetable",
+  "description": "Timetable (grille horaire) de l'édition en cours : versions, jours, scènes, et pour chaque scène les passages (heure de début/fin, artiste ou pause), conflits et artistes confirmés pas encore placés.",
+  "parameters": {
+   "type": "object",
+   "properties": {
+    "all_versions": {
+     "type": "boolean"
+    }
+   },
+   "required": []
+  }
+ }
+]

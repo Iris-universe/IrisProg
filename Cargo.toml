@@ -1,0 +1,47 @@
+[package]
+name = "irisprog"
+version = "2.0.0"
+description = "IrisProg : programmation de festival / d'événements (base d'artistes, propositions, timetable, mails), en Rust"
+edition = "2021"
+default-run = "irisprog"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+# briques partagées (../iris-briques, github.com/Iris-universe/iris-briques)
+iris-store = { git = "https://github.com/Iris-universe/iris-briques" }
+iris-link = { git = "https://github.com/Iris-universe/iris-briques" }
+iris-secrets = { git = "https://github.com/Iris-universe/iris-briques" }
+
+tauri = { version = "2", features = ["custom-protocol", "devtools", "unstable"] }
+tauri-plugin-single-instance = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["net", "io-util", "time", "rt", "macros", "sync"] }
+futures = "0.3"
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "json", "gzip"] }
+rfd = "0.15"
+dirs = "5"
+chrono = "0.4"
+base64 = "0.22"
+sha1_smol = "1"
+sha2 = "0.10"
+rand = "0.8"
+url = "2"
+regex = "1"
+unicode-normalization = "0.1"
+urlencoding = "2"
+async-imap = { version = "0.10", default-features = false, features = ["runtime-tokio"] }
+tokio-rustls = { version = "0.26", default-features = false, features = ["ring", "tls12", "logging"] }
+webpki-roots = "0.26"
+mail-parser = "0.11"
+lettre = { version = "0.11", default-features = false, features = ["builder", "smtp-transport", "tokio1", "tokio1-rustls-tls", "hostname"] }
+webview2-com = "0.39"
+windows = { version = "0.62", features = ["Win32_Foundation", "Win32_System_Com"] }
+windows-sys = { version = "0.59", features = ["Win32_Foundation"] }
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 8
